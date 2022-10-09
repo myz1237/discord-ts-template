@@ -1,0 +1,38 @@
+{
+	"name": "dd_assistant",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"start": "node ./dist/index.js",
+		"dev": "nodemon",
+		"build": "tsc",
+		"watch": "tsc -w",
+		"eslint": "eslint src --ext .ts",
+		"deploy": "rm -rf dist && npm run build && ((pm2 delete oasis && pm2 start dd.config.js) || pm2 start dd.config.js)"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"@types/firebase": "^3.2.1",
+		"@types/glob": "^8.0.0",
+		"@types/lodash": "^4.14.186",
+		"@types/sprintf-js": "^1.1.2",
+		"@typescript-eslint/parser": "^5.39.0",
+		"ascii-table": "^0.0.9",
+		"discord-api-types": "^0.37.12",
+		"discord.js": "^14.5.0",
+		"dotenv": "^16.0.3",
+		"eslint": "^8.25.0",
+		"eslint-config-alloy": "^4.7.0",
+		"firebase": "^9.11.0",
+		"glob": "^8.0.3",
+		"lodash": "^4.17.21",
+		"node-cache": "^5.1.2",
+		"pino": "^8.6.1",
+		"pino-pretty": "^9.1.1",
+		"prettier": "^2.7.1",
+		"sprintf-js": "^1.1.2"
+	}
+}
