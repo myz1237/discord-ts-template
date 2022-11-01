@@ -1,6 +1,6 @@
 import { sprintf } from 'sprintf-js';
+
 import { ERROR_REPLY, NUMBER } from './const';
-import _ from 'lodash';
 import { TimeOutError } from './error';
 export interface awaitWrapType<T> {
 	result: T | null;
@@ -29,9 +29,10 @@ export async function awaitWrapWithTimeout<T>(
 ): Promise<awaitWrapType<T>> {
 	const timeout = new Promise<never>((_, reject) => {
 		setTimeout(() => {
-			reject(new TimeOutError);
+			reject(new TimeOutError());
 		}, ms);
 	});
+
 	return Promise.race([promise, timeout])
 		.then((data) => {
 			return {
@@ -53,6 +54,7 @@ export function getErrorReply(errorInform: {
 	errorMessage: string;
 }) {
 	const { commandName, subCommandName, errorMessage } = errorInform;
+
 	if (subCommandName) {
 		return sprintf(ERROR_REPLY.GRAPHQL, {
 			action: `${commandName} ${subCommandName}`,

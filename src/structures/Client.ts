@@ -1,3 +1,4 @@
+import AsciiTable from 'ascii-table';
 import {
 	ChatInputApplicationCommandData,
 	Client,
@@ -7,33 +8,30 @@ import {
 	MessageApplicationCommandData,
 	UserApplicationCommandData
 } from 'discord.js';
-import { getFirestore } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
-import { CommandType } from '../types/Command';
+import { getFirestore } from 'firebase/firestore';
+import glob from 'glob';
 import { promisify } from 'util';
+
+import { AutoType } from '../types/Auto';
+import { ButtonType } from '../types/Button';
+import { CommandType } from '../types/Command';
 import { RegisterCommandsOptions } from '../types/CommandRegister';
+import { MessageContextMenuType, UserContextMenuType } from '../types/ContextMenu';
+import { ModalType } from '../types/Modal';
 import { logger } from '../utils/logger';
 import { Event } from './Event';
-import { myCache } from './Cache';
-import { ButtonType } from '../types/Button';
-import { ModalType } from '../types/Modal';
-import { AutoType } from '../types/Auto';
-import { CacheType } from '../types/Cache';
-import { ContextMenuType } from '../types/ContextMenu';
-import { awaitWrap } from '../utils/util';
-import { NUMBER } from '../utils/const';
-
-import AsciiTable from 'ascii-table';
-import glob from 'glob';
 
 const globPromise = promisify(glob);
 
 export class MyClient extends Client {
-	public commands: Collection<string, CommandType> = new Collection();
+	public commands: Collection<
+		string,
+		CommandType | MessageContextMenuType | UserContextMenuType
+	> = new Collection();
 	public buttons: Collection<string, ButtonType> = new Collection();
 	public modals: Collection<string, ModalType> = new Collection();
 	public autos: Collection<string, AutoType> = new Collection();
-	public menus: Collection<string, ContextMenuType> = new Collection();
 
 	private table: any;
 
@@ -88,43 +86,55 @@ export class MyClient extends Client {
 			| UserApplicationCommandData
 		> = [];
 		const commandFiles = await globPromise(`${__dirname}/../commands/*{.ts,.js}`);
+
 		commandFiles.forEach(async (filePath) => {
 			const command: CommandType = await this._importFiles(filePath);
+
 			if (!command.name) return;
 			this.commands.set(command.name, command);
 			slashCommands.push(command);
 		});
 
 		const buttonFiles = await globPromise(`${__dirname}/../buttons/*{.ts,.js}`);
+
 		buttonFiles.forEach(async (filePath) => {
 			const button: ButtonType = await this._importFiles(filePath);
+
 			button.customIds.forEach((customId) => {
 				this.buttons.set(customId, button);
 			});
 		});
 
 		const modalFiles = await globPromise(`${__dirname}/../modals/*{.ts,.js}`);
+
 		modalFiles.forEach(async (filePath) => {
 			const modal: ModalType = await this._importFiles(filePath);
+
 			this.modals.set(modal.customId, modal);
 		});
 
 		const autoFiles = await globPromise(`${__dirname}/../autocompletes/*{.ts,.js}`);
+
 		autoFiles.forEach(async (filePath) => {
 			const auto: AutoType = await this._importFiles(filePath);
+
 			this.autos.set(auto.correspondingCommandName, auto);
 		});
 
 		const menuFiles = await globPromise(`${__dirname}/../contextmenus/*{.ts,.js}`);
+
 		menuFiles.forEach(async (filePath) => {
-			const menu: ContextMenuType = await this._importFiles(filePath);
-			this.menus.set(menu.name, menu);
+			const menu: MessageContextMenuType | UserContextMenuType = await this._importFiles(
+				filePath
+			);
+
+			this.commands.set(menu.name, menu);
 			slashCommands.push(menu);
 		});
 
 		this.once('ready', async () => {
 			await this.guilds.fetch();
-			await this._firestoneInit();
+			await this._loadCache();
 			if (process.env.MODE === 'dev') {
 				await this._registerCommands({
 					guildId: process.env.GUILDID,
@@ -139,16 +149,21 @@ export class MyClient extends Client {
 
 		// Load Events
 		const eventFiles = await globPromise(`${__dirname}/../events/*{.ts,.js}`);
+
 		eventFiles.forEach(async (filePath) => {
 			const event: Event<keyof ClientEvents> = await this._importFiles(filePath);
+
 			this.on(event.eventName, event.run);
 		});
 	}
 
-	private async _firestoneInit() {
+	private async _loadCache() {
 		const app = initializeApp({
 			projectId: process.env.PROJECTID
 		});
 		const db = getFirestore(app);
+		// to-do just a placeholder
+
+		console.log(db);
 	}
 }

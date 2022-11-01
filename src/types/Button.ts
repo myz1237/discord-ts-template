@@ -1,9 +1,10 @@
 import { ButtonInteraction, GuildMember, Message } from 'discord.js';
+
 import { MyClient } from '../structures/Client';
 
 export interface ExtendedButtonInteraction extends ButtonInteraction {
 	member: GuildMember;
-	message: Message
+	message: Message;
 }
 
 interface ButtonRunOptions {
@@ -12,8 +13,9 @@ interface ButtonRunOptions {
 }
 
 type RunFunction = (options: ButtonRunOptions) => any;
-type buttonCustomId = '';
+type ButtonCustomId = '';
+export type ButtonCollectorCustomId = '';
 export interface ButtonType {
-	customIds: Array<buttonCustomId>;
+	customIds: Array<ButtonCustomId>;
 	execute: RunFunction;
 }

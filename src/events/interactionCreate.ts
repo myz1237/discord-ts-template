@@ -1,19 +1,22 @@
 import {
+	ApplicationCommandType,
 	AutocompleteInteraction,
 	CommandInteractionOptionResolver,
 	Interaction
 } from 'discord.js';
+import { sprintf } from 'sprintf-js';
+
+import { client } from '..';
 import { Event } from '../structures/Event';
 import { ExtendedButtonInteraction } from '../types/Button';
 import { ExtendedCommandInteration } from '../types/Command';
+import {
+	ExtendedMessageContextMenuInteraction,
+	ExtendedUserContextMenuInteraction
+} from '../types/ContextMenu';
 import { ExtendedModalSubmitInteraction } from '../types/Modal';
-import { myCache } from '../structures/Cache';
+import { ButtonCollectorCustomIdRecord, ERROR_REPLY } from '../utils/const';
 import { logger } from '../utils/logger';
-import { sprintf } from 'sprintf-js';
-import { ERROR_REPLY } from '../utils/const';
-
-import _ from 'lodash';
-import { client } from '..';
 
 export default new Event('interactionCreate', async (interaction: Interaction) => {
 	const errorInform = {
@@ -23,27 +26,57 @@ export default new Event('interactionCreate', async (interaction: Interaction) =
 
 	if (interaction.isCommand()) {
 		const command = client.commands.get(interaction.commandName);
+
 		if (!command) {
 			return interaction.reply({
 				content: 'You have used a non exitent command',
 				ephemeral: true
 			});
 		}
-
 		try {
-			await command.execute({
-				client: client,
-				interaction: interaction as ExtendedCommandInteration,
-				args: interaction.options as CommandInteractionOptionResolver
-			});
+			switch (command.type) {
+				case ApplicationCommandType.ChatInput: {
+					await command.execute({
+						client: client,
+						interaction: interaction as ExtendedCommandInteration,
+						args: interaction.options as CommandInteractionOptionResolver
+					});
+					break;
+				}
+				case ApplicationCommandType.Message: {
+					await command.execute({
+						interaction: interaction as ExtendedMessageContextMenuInteraction
+					});
+					break;
+				}
+				case ApplicationCommandType.User: {
+					await command.execute({
+						interaction: interaction as ExtendedUserContextMenuInteraction
+					});
+					break;
+				}
+			}
 		} catch (error) {
-			const errorMsg = sprintf(ERROR_REPLY.INTERACTION, {
-				...errorInform,
-				commandName: interaction.commandName,
-				errorName: error?.name,
-				errorMsg: error?.message,
-				errorStack: error?.stack
-			});
+			let errorMsg: string;
+
+			if (command.type === ApplicationCommandType.ChatInput) {
+				errorMsg = sprintf(ERROR_REPLY.INTERACTION, {
+					...errorInform,
+					commandName: interaction.commandName,
+					errorName: error?.name,
+					errorMsg: error?.message,
+					errorStack: error?.stack
+				});
+			} else {
+				errorMsg = sprintf(ERROR_REPLY.MENU, {
+					...errorInform,
+					commandName: interaction.commandName,
+					errorName: error?.name,
+					errorMsg: error?.message,
+					errorStack: error?.stack
+				});
+			}
+
 			if (interaction.deferred) {
 				logger.error(errorMsg);
 				return interaction.followUp({
@@ -64,6 +97,7 @@ export default new Event('interactionCreate', async (interaction: Interaction) =
 		const button = client.buttons.get(interaction.customId);
 
 		if (!button) {
+			if (Object.keys(ButtonCollectorCustomIdRecord).includes(interaction.customId)) return;
 			return interaction.reply({
 				content: 'You have clicked a non exitent button',
 				ephemeral: true
@@ -83,6 +117,7 @@ export default new Event('interactionCreate', async (interaction: Interaction) =
 				errorMsg: error?.message,
 				errorStack: error?.stack
 			});
+
 			if (interaction.deferred) {
 				logger.error(errorMsg);
 				return interaction.followUp({
@@ -122,6 +157,7 @@ export default new Event('interactionCreate', async (interaction: Interaction) =
 				errorMsg: error?.message,
 				errorStack: error?.stack
 			});
+
 			if (interaction.deferred) {
 				logger.error(errorMsg);
 				interaction.followUp({
@@ -161,45 +197,6 @@ export default new Event('interactionCreate', async (interaction: Interaction) =
 					errorStack: error?.stack
 				})
 			);
-		}
-	}
-
-	if (interaction.isUserContextMenuCommand() || interaction.isMessageContextMenuCommand()) {
-		const menu = client.menus.get(interaction.commandName);
-
-		if (!menu) {
-			return interaction.reply({
-				content: `A non exitent context menu is triggered: ${interaction.commandName}`,
-				ephemeral: true
-			});
-		}
-
-		try {
-			await menu.execute({
-				client: client,
-				interaction: interaction
-			});
-		} catch (error) {
-			const errorMessage = sprintf(ERROR_REPLY.MENU, {
-				...errorInform,
-				menuName: interaction.commandName,
-				errorName: error?.name,
-				errorMsg: error?.message,
-				errorStack: error?.stack
-			});
-			if (interaction.deferred) {
-				logger.error(errorMessage);
-				interaction.followUp({
-					content: ERROR_REPLY.COMMON
-				});
-			}
-			if (!interaction.replied) {
-				logger.error(errorMessage);
-				interaction.reply({
-					content: ERROR_REPLY.COMMON,
-					ephemeral: true
-				});
-			}
 		}
 	}
 });

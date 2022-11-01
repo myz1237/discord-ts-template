@@ -1,10 +1,12 @@
 import {
+	ApplicationCommandType,
 	ChatInputApplicationCommandData,
 	CommandInteraction,
 	CommandInteractionOptionResolver,
 	GuildMember,
 	PermissionResolvable
 } from 'discord.js';
+
 import { MyClient } from '../structures/Client';
 
 export interface ExtendedCommandInteration extends CommandInteraction {
@@ -23,4 +25,5 @@ export type CommandType = {
 	name: CommandNameEmun;
 	userPermissions?: PermissionResolvable[];
 	execute: RunFunction;
+	type: ApplicationCommandType.ChatInput;
 } & ChatInputApplicationCommandData;
