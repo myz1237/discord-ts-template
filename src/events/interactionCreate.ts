@@ -7,6 +7,7 @@ import {
 import { sprintf } from 'sprintf-js';
 
 import { client } from '..';
+import { myCache } from '../structures/Cache';
 import { Event } from '../structures/Event';
 import { ExtendedButtonInteraction } from '../types/Button';
 import { ExtendedCommandInteration } from '../types/Command';
@@ -23,6 +24,17 @@ export default new Event('interactionCreate', async (interaction: Interaction) =
 		userName: interaction?.user?.username,
 		guildName: interaction?.guild?.name
 	};
+
+	if (!myCache.myHasAll()) {
+		if (interaction.isAutocomplete()) {
+			return interaction.respond([]);
+		} else {
+			return interaction.reply({
+				content: 'Bot is initing... Please try again later.',
+				ephemeral: true
+			});
+		}
+	}
 
 	if (interaction.isCommand()) {
 		const command = client.commands.get(interaction.commandName);

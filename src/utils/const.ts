@@ -1,4 +1,5 @@
-import { ButtonCollectorCustomId } from "../types/Button";
+import { ButtonCollectorCustomId } from '../types/Button';
+import { CacheType } from '../types/Cache';
 
 type NumericalProperty = 'AWAIT_TIMEOUT' | 'AUTOCOMPLETE_OPTION_LENGTH';
 type ErroProperty = 'COMMON' | 'GRAPHQL' | 'INTERACTION' | 'BUTTON' | 'AUTO' | 'MODAL' | 'MENU';
@@ -24,4 +25,8 @@ export const ERROR_REPLY: InternalError = {
 
 export const ButtonCollectorCustomIdRecord: Readonly<Record<ButtonCollectorCustomId, string>> = {
 	'': ''
+};
+
+export const CACHE_KEYS: Readonly<Record<keyof CacheType, keyof CacheType>> = {
+	test: 'test'
 };
