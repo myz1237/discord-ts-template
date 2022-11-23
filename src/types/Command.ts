@@ -20,9 +20,9 @@ interface CommandRunOptions {
 }
 
 type RunFunction = (options: CommandRunOptions) => any;
-export type CommandNameEmun = '';
+export type CommandNameEnum = '';
 export type CommandType = {
-	name: CommandNameEmun;
+	name: CommandNameEnum;
 	userPermissions?: PermissionResolvable[];
 	execute: RunFunction;
 	type: ApplicationCommandType.ChatInput;

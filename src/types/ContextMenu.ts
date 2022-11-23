@@ -11,11 +11,13 @@ import {
 
 export interface ExtendedUserContextMenuInteraction extends UserContextMenuCommandInteraction {
 	targetMember: GuildMember;
+	member: GuildMember;
 }
 
 export interface ExtendedMessageContextMenuInteraction
 	extends MessageContextMenuCommandInteraction {
 	targetMessage: Message;
+	member: GuildMember;
 }
 
 interface MessageContextMenuCommandRunOption {
@@ -29,7 +31,7 @@ interface UserContextMenuCommandRunOption {
 type MessageContextMenuRunFunction = (options: MessageContextMenuCommandRunOption) => any;
 type UserContextMenuRunFunction = (options: UserContextMenuCommandRunOption) => any;
 
-type ContextMenuNameEnum = '';
+export type ContextMenuNameEnum = 'Test';
 export type UserContextMenuType = {
 	userPermissions?: PermissionResolvable[];
 	execute: UserContextMenuRunFunction;

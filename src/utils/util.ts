@@ -1,5 +1,8 @@
+import { Guild } from 'discord.js';
 import { sprintf } from 'sprintf-js';
 
+import { CommandNameEnum } from '../types/Command';
+import { ContextMenuNameEnum } from '../types/ContextMenu';
 import { ERROR_REPLY, NUMBER } from './const';
 import { TimeOutError } from './error';
 export interface awaitWrapType<T> {
@@ -65,5 +68,15 @@ export function getErrorReply(errorInform: {
 			action: `${commandName}`,
 			errorMessage: `\`${errorMessage}\``
 		});
+	}
+}
+
+export function fetchCommandId(commandName: CommandNameEnum | ContextMenuNameEnum, guild: Guild) {
+	if (process.env.MODE === 'dev') {
+		return guild.commands.cache.filter((cmd) => cmd.name === commandName).first().id;
+	} else {
+		return guild.client.application.commands.cache
+			.filter((cmd) => cmd.name === commandName)
+			.first().id;
 	}
 }

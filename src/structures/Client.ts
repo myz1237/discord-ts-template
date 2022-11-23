@@ -8,11 +8,10 @@ import {
 	MessageApplicationCommandData,
 	UserApplicationCommandData
 } from 'discord.js';
-import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
 import glob from 'glob';
 import { promisify } from 'util';
 
+import { prisma } from '../prisma/prisma';
 import { AutoType } from '../types/Auto';
 import { ButtonType } from '../types/Button';
 import { CommandType } from '../types/Command';
@@ -133,6 +132,7 @@ export class MyClient extends Client {
 		});
 
 		this.once('ready', async () => {
+			logger.info('Bot is online.');
 			await this.guilds.fetch();
 			await this._loadCache();
 			if (process.env.MODE === 'dev') {
@@ -158,12 +158,7 @@ export class MyClient extends Client {
 	}
 
 	private async _loadCache() {
-		const app = initializeApp({
-			projectId: process.env.PROJECTID
-		});
-		const db = getFirestore(app);
-		// to-do just a placeholder
-
-		console.log(db);
+		await prisma.$connect();
+		logger.info(`\n${this.table.toSting()}`);
 	}
 }
