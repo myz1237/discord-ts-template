@@ -1,7 +1,8 @@
-import { Button } from '../structures/Button';
+import { Button } from 'structures/Button';
+import { ButtonCustomId } from 'types/Button';
 
 export default new Button({
-	customIds: [''],
+	customIds: [ButtonCustomId.Test],
 	execute: ({ interaction }) => {
 		return interaction.reply({
 			content: 'WIP'

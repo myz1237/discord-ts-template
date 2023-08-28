@@ -1,4 +1,4 @@
-import { ButtonType } from '../types/Button';
+import { ButtonType } from 'types/Button';
 
 export class Button {
 	public constructor(public buttonHandler: ButtonType) {

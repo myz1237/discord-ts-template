@@ -1,6 +1,7 @@
+/* eslint-disable no-unused-vars */
 import { AutocompleteInteraction } from 'discord.js';
+import { MyClient } from 'structures/Client';
 
-import { MyClient } from '../structures/Client';
 import { CommandNameEnum } from './Command';
 
 interface AutoRunOptions {

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
 	ApplicationCommandType,
 	ChatInputApplicationCommandData,
@@ -6,21 +7,22 @@ import {
 	GuildMember,
 	PermissionResolvable
 } from 'discord.js';
+import { MyClient } from 'structures/Client';
 
-import { MyClient } from '../structures/Client';
-
-export interface ExtendedCommandInteration extends CommandInteraction {
+export interface ExtendedCommandInteraction extends CommandInteraction {
 	member: GuildMember;
 }
 
 interface CommandRunOptions {
 	client: MyClient;
-	interaction: ExtendedCommandInteration;
+	interaction: ExtendedCommandInteraction;
 	args: CommandInteractionOptionResolver;
 }
 
 type RunFunction = (options: CommandRunOptions) => any;
-export type CommandNameEnum = '';
+export enum CommandNameEnum {
+	Test = 'test'
+}
 export type CommandType = {
 	name: CommandNameEnum;
 	userPermissions?: PermissionResolvable[];

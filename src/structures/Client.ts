@@ -9,16 +9,17 @@ import {
 	UserApplicationCommandData
 } from 'discord.js';
 import glob from 'glob';
+import { join } from 'path';
+import { prisma } from 'prisma/prisma';
+import { AutoType } from 'types/Auto';
+import { ButtonType } from 'types/Button';
+import { CommandType } from 'types/Command';
+import { RegisterCommandsOptions } from 'types/CommandRegister';
+import { MessageContextMenuType, UserContextMenuType } from 'types/ContextMenu';
+import { ModalType } from 'types/Modal';
 import { promisify } from 'util';
+import { logger } from 'utils/logger';
 
-import { prisma } from '../prisma/prisma';
-import { AutoType } from '../types/Auto';
-import { ButtonType } from '../types/Button';
-import { CommandType } from '../types/Command';
-import { RegisterCommandsOptions } from '../types/CommandRegister';
-import { MessageContextMenuType, UserContextMenuType } from '../types/ContextMenu';
-import { ModalType } from '../types/Modal';
-import { logger } from '../utils/logger';
 import { Event } from './Event';
 
 const globPromise = promisify(glob);
@@ -84,7 +85,7 @@ export class MyClient extends Client {
 			| MessageApplicationCommandData
 			| UserApplicationCommandData
 		> = [];
-		const commandFiles = await globPromise(`${__dirname}/../commands/*{.ts,.js}`);
+		const commandFiles = await globPromise(join(__dirname, '..', 'commands', '*{.ts,.js}'));
 
 		commandFiles.forEach(async (filePath) => {
 			const command: CommandType = await this._importFiles(filePath);
@@ -94,7 +95,7 @@ export class MyClient extends Client {
 			slashCommands.push(command);
 		});
 
-		const buttonFiles = await globPromise(`${__dirname}/../buttons/*{.ts,.js}`);
+		const buttonFiles = await globPromise(join(__dirname, '..', 'buttons', '*{.ts,.js}'));
 
 		buttonFiles.forEach(async (filePath) => {
 			const button: ButtonType = await this._importFiles(filePath);
@@ -104,7 +105,7 @@ export class MyClient extends Client {
 			});
 		});
 
-		const modalFiles = await globPromise(`${__dirname}/../modals/*{.ts,.js}`);
+		const modalFiles = await globPromise(join(__dirname, '..', 'modals', '*{.ts,.js}'));
 
 		modalFiles.forEach(async (filePath) => {
 			const modal: ModalType = await this._importFiles(filePath);
@@ -112,7 +113,7 @@ export class MyClient extends Client {
 			this.modals.set(modal.customId, modal);
 		});
 
-		const autoFiles = await globPromise(`${__dirname}/../autocompletes/*{.ts,.js}`);
+		const autoFiles = await globPromise(join(__dirname, '..', 'autocompletes', '*{.ts,.js}'));
 
 		autoFiles.forEach(async (filePath) => {
 			const auto: AutoType = await this._importFiles(filePath);
@@ -120,7 +121,7 @@ export class MyClient extends Client {
 			this.autos.set(auto.correspondingCommandName, auto);
 		});
 
-		const menuFiles = await globPromise(`${__dirname}/../contextmenus/*{.ts,.js}`);
+		const menuFiles = await globPromise(join(__dirname, '..', 'contextmenus', '*{.ts,.js}'));
 
 		menuFiles.forEach(async (filePath) => {
 			const menu: MessageContextMenuType | UserContextMenuType = await this._importFiles(
@@ -148,7 +149,7 @@ export class MyClient extends Client {
 		});
 
 		// Load Events
-		const eventFiles = await globPromise(`${__dirname}/../events/*{.ts,.js}`);
+		const eventFiles = await globPromise(join(__dirname, '..', 'events', '*{.ts,.js}'));
 
 		eventFiles.forEach(async (filePath) => {
 			const event: Event<keyof ClientEvents> = await this._importFiles(filePath);

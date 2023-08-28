@@ -1,11 +1,10 @@
-import { ButtonCollectorCustomId } from '../types/Button';
-import { CacheType } from '../types/Cache';
+import { CacheType } from 'types/Cache';
 
 type NumericalProperty = 'AWAIT_TIMEOUT' | 'AUTOCOMPLETE_OPTION_LENGTH';
-type ErroProperty = 'COMMON' | 'GRAPHQL' | 'INTERACTION' | 'BUTTON' | 'AUTO' | 'MODAL' | 'MENU';
+type ErrorProperty = 'COMMON' | 'GRAPHQL' | 'INTERACTION' | 'BUTTON' | 'AUTO' | 'MODAL' | 'MENU';
 
 type Numerical = Readonly<Record<NumericalProperty, number>>;
-type InternalError = Readonly<Record<ErroProperty, string>>;
+type InternalError = Readonly<Record<ErrorProperty, string>>;
 
 export const NUMBER: Numerical = {
 	AWAIT_TIMEOUT: 15 * 1000,
@@ -13,7 +12,7 @@ export const NUMBER: Numerical = {
 };
 
 export const ERROR_REPLY: InternalError = {
-	GRAPHQL: 'Error occured when running `%(action)s`: %(errorMessage)s',
+	GRAPHQL: 'Error occurred when running `%(action)s`: %(errorMessage)s',
 	COMMON: 'Unknown Error, please report this to the admin',
 	INTERACTION:
 		'User: %(userName)s Guild: %(guildName)s Error: %(errorName)s occurs when executing %(commandName)s command. Msg: %(errorMsg)s Stack: %(errorStack)s.',
@@ -21,10 +20,6 @@ export const ERROR_REPLY: InternalError = {
 	AUTO: 'User: %(userName)s Guild: %(guildName)s Error: %(errorName)s occurs when interacting %(commandName)s auto. Msg: %(errorMsg)s Stack: %(errorStack)s.',
 	MODAL: 'User: %(userName)s Guild: %(guildName)s Error: %(errorName)s occurs when interacting %(customId)s modal. Msg: %(errorMsg)s Stack: %(errorStack)s.',
 	MENU: 'User: %(userName)s Guild: %(guildName)s Error: %(errorName)s occurs when executing %(menuName)s menu. Msg: %(errorMsg)s Stack: %(errorStack)s.'
-};
-
-export const ButtonCollectorCustomIdRecord: Readonly<Record<ButtonCollectorCustomId, string>> = {
-	'': ''
 };
 
 export const CACHE_KEYS: Readonly<Record<keyof CacheType, keyof CacheType>> = {

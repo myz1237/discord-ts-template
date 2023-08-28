@@ -1,8 +1,8 @@
 import { Guild } from 'discord.js';
 import { sprintf } from 'sprintf-js';
+import { CommandNameEnum } from 'types/Command';
+import { ContextMenuNameEnum } from 'types/ContextMenu';
 
-import { CommandNameEnum } from '../types/Command';
-import { ContextMenuNameEnum } from '../types/ContextMenu';
 import { ERROR_REPLY, NUMBER } from './const';
 import { TimeOutError } from './error';
 export interface awaitWrapType<T> {

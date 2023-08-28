@@ -1,4 +1,4 @@
-import { ModalType } from '../types/Modal';
+import { ModalType } from 'types/Modal';
 
 export class Modal {
 	public constructor(public modalHandler: ModalType) {

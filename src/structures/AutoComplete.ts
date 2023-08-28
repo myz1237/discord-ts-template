@@ -1,4 +1,4 @@
-import { AutoType } from "../types/Auto";
+import { AutoType } from 'types/Auto';
 
 export class Auto {
 	public constructor(public autoHandler: AutoType) {

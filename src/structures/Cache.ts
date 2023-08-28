@@ -1,7 +1,6 @@
 import NodeCache from 'node-cache';
-
-import { CacheType } from '../types/Cache';
-import { CACHE_KEYS } from '../utils/const';
+import { CacheType } from 'types/Cache';
+import { CACHE_KEYS } from 'utils/const';
 
 class MyCache extends NodeCache {
 	public constructor(options = {}) {

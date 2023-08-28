@@ -5,19 +5,19 @@ import {
 	Interaction
 } from 'discord.js';
 import { sprintf } from 'sprintf-js';
-
-import { client } from '..';
-import { myCache } from '../structures/Cache';
-import { Event } from '../structures/Event';
-import { ExtendedButtonInteraction } from '../types/Button';
-import { ExtendedCommandInteration } from '../types/Command';
+import { myCache } from 'structures/Cache';
+import { Event } from 'structures/Event';
+import { ButtonCollectorCustomId, ExtendedButtonInteraction } from 'types/Button';
+import { ExtendedCommandInteraction } from 'types/Command';
 import {
 	ExtendedMessageContextMenuInteraction,
 	ExtendedUserContextMenuInteraction
-} from '../types/ContextMenu';
-import { ExtendedModalSubmitInteraction } from '../types/Modal';
-import { ButtonCollectorCustomIdRecord, ERROR_REPLY } from '../utils/const';
-import { logger } from '../utils/logger';
+} from 'types/ContextMenu';
+import { ExtendedModalSubmitInteraction, ModalCollectorCustomId } from 'types/Modal';
+import { ERROR_REPLY } from 'utils/const';
+import { logger } from 'utils/logger';
+
+import myClient from '..';
 
 export default new Event('interactionCreate', async (interaction: Interaction) => {
 	const errorInform = {
@@ -30,18 +30,18 @@ export default new Event('interactionCreate', async (interaction: Interaction) =
 			return interaction.respond([]);
 		} else {
 			return interaction.reply({
-				content: 'Bot is initing... Please try again later.',
+				content: 'Bot is initiating... Please try again later.',
 				ephemeral: true
 			});
 		}
 	}
 
 	if (interaction.isCommand()) {
-		const command = client.commands.get(interaction.commandName);
+		const command = myClient.commands.get(interaction.commandName);
 
 		if (!command) {
 			return interaction.reply({
-				content: 'You have used a non exitent command',
+				content: 'You have used a non existent command',
 				ephemeral: true
 			});
 		}
@@ -49,8 +49,8 @@ export default new Event('interactionCreate', async (interaction: Interaction) =
 			switch (command.type) {
 				case ApplicationCommandType.ChatInput: {
 					await command.execute({
-						client: client,
-						interaction: interaction as ExtendedCommandInteration,
+						client: myClient,
+						interaction: interaction as ExtendedCommandInteraction,
 						args: interaction.options as CommandInteractionOptionResolver
 					});
 					break;
@@ -106,19 +106,19 @@ export default new Event('interactionCreate', async (interaction: Interaction) =
 	}
 
 	if (interaction.isButton()) {
-		const button = client.buttons.get(interaction.customId);
+		const button = myClient.buttons.get(interaction.customId);
 
 		if (!button) {
-			if (Object.keys(ButtonCollectorCustomIdRecord).includes(interaction.customId)) return;
+			if (Object.keys(ButtonCollectorCustomId).includes(interaction.customId)) return;
 			return interaction.reply({
-				content: 'You have clicked a non exitent button',
+				content: 'You have clicked a non existent button',
 				ephemeral: true
 			});
 		}
 
 		try {
 			await button.execute({
-				client: client,
+				client: myClient,
 				interaction: interaction as ExtendedButtonInteraction
 			});
 		} catch (error) {
@@ -147,18 +147,19 @@ export default new Event('interactionCreate', async (interaction: Interaction) =
 	}
 
 	if (interaction.isModalSubmit()) {
-		const modal = client.modals.get(interaction.customId);
+		const modal = myClient.modals.get(interaction.customId);
 
 		if (!modal) {
+			if (Object.keys(ModalCollectorCustomId).includes(interaction.customId)) return;
 			return interaction.reply({
-				content: 'You have clicked a non exitent modal',
+				content: 'You have clicked a non existent modal',
 				ephemeral: true
 			});
 		}
 
 		try {
 			await modal.execute({
-				client: client,
+				client: myClient,
 				interaction: interaction as ExtendedModalSubmitInteraction
 			});
 		} catch (error) {
@@ -187,16 +188,16 @@ export default new Event('interactionCreate', async (interaction: Interaction) =
 	}
 
 	if (interaction.isAutocomplete()) {
-		const auto = client.autos.get(interaction.commandName);
+		const auto = myClient.autos.get(interaction.commandName);
 
 		if (!auto) {
-			logger.error(`A non exitent auto is triggered: ${interaction.commandName}`);
+			logger.error(`A non existent auto is triggered: ${interaction.commandName}`);
 			return interaction.respond([]);
 		}
 
 		try {
 			await auto.execute({
-				client: client,
+				client: myClient,
 				interaction: interaction as AutocompleteInteraction
 			});
 		} catch (error) {

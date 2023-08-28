@@ -1,6 +1,6 @@
+/* eslint-disable no-unused-vars */
 import { ButtonInteraction, GuildMember, Message } from 'discord.js';
-
-import { MyClient } from '../structures/Client';
+import { MyClient } from 'structures/Client';
 
 export interface ExtendedButtonInteraction extends ButtonInteraction {
 	member: GuildMember;
@@ -13,8 +13,11 @@ interface ButtonRunOptions {
 }
 
 type RunFunction = (options: ButtonRunOptions) => any;
-type ButtonCustomId = '';
-export type ButtonCollectorCustomId = '';
+
+export enum ButtonCustomId {
+	Test = 'test'
+}
+export enum ButtonCollectorCustomId {}
 export interface ButtonType {
 	customIds: Array<ButtonCustomId>;
 	execute: RunFunction;
