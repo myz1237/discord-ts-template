@@ -26,6 +26,7 @@
 		"dotenv": "^16.0.3",
 		"glob": "^8.0.3",
 		"lodash": "^4.17.21",
+		"neverthrow": "^6.0.0",
 		"node-cache": "^5.1.2",
 		"nodemon": "^2.0.20",
 		"pino": "^8.6.1",
