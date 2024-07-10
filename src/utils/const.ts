@@ -1,27 +1,30 @@
-import { CacheType } from 'types/Cache';
+export type InteractionType = 'COMMAND' | 'BUTTON' | 'AUTO' | 'MODAL' | 'MENU' | 'MESSAGE';
+export type InteractionErrorMessageTemplateType = {
+	userName: string;
+	errorName: string;
+	errorMsg: string;
+	errorStack: string;
+	identity: string;
+};
 
-type NumericalProperty = 'AWAIT_TIMEOUT' | 'AUTOCOMPLETE_OPTION_LENGTH';
-type ErrorProperty = 'COMMON' | 'GRAPHQL' | 'INTERACTION' | 'BUTTON' | 'AUTO' | 'MODAL' | 'MENU';
-
-type Numerical = Readonly<Record<NumericalProperty, number>>;
-type InternalError = Readonly<Record<ErrorProperty, string>>;
-
-export const NUMBER: Numerical = {
+export const NUMBER = {
 	AWAIT_TIMEOUT: 15 * 1000,
 	AUTOCOMPLETE_OPTION_LENGTH: 25
 };
 
-export const ERROR_REPLY: InternalError = {
-	GRAPHQL: 'Error occurred when running `%(action)s`: %(errorMessage)s',
-	COMMON: 'Unknown Error, please report this to the admin',
-	INTERACTION:
-		'User: %(userName)s Guild: %(guildName)s Error: %(errorName)s occurs when executing %(commandName)s command. Msg: %(errorMsg)s Stack: %(errorStack)s.',
-	BUTTON: 'User: %(userName)s Guild: %(guildName)s Error: %(errorName)s occurs when interacting %(customId)s button. Msg: %(errorMsg)s Stack: %(errorStack)s.',
-	AUTO: 'User: %(userName)s Guild: %(guildName)s Error: %(errorName)s occurs when interacting %(commandName)s auto. Msg: %(errorMsg)s Stack: %(errorStack)s.',
-	MODAL: 'User: %(userName)s Guild: %(guildName)s Error: %(errorName)s occurs when interacting %(customId)s modal. Msg: %(errorMsg)s Stack: %(errorStack)s.',
-	MENU: 'User: %(userName)s Guild: %(guildName)s Error: %(errorName)s occurs when executing %(menuName)s menu. Msg: %(errorMsg)s Stack: %(errorStack)s.'
+export const ErrorMessage = {
+	BotInit: 'Bot is initializing, please try again later.',
+	GuildUnavailable: 'Sorry, current guild is available now. Please try again later.',
+	UnknownError: 'Unknown Error, please report this to the admin'
 };
 
-export const CACHE_KEYS: Readonly<Record<keyof CacheType, keyof CacheType>> = {
-	test: 'test'
+export const InteractionErrorMessageTemplate: Record<InteractionType, string> = {
+	COMMAND:
+		'User: %(userName)s Error: %(errorName)s occurs when executing %(identity)s command. ErrorMsg: %(errorMsg)s Stack: %(errorStack)s',
+	BUTTON: 'User: %(userName)s Error: %(errorName)s occurs when interacting %(identity)s button. ErrorMsg: %(errorMsg)s Stack: %(errorStack)s',
+	AUTO: 'User: %(userName)s Error: %(errorName)s occurs when interacting %(identity)s auto. ErrorMsg: %(errorMsg)s Stack: %(errorStack)s',
+	MODAL: 'User: %(userName)s Error: %(errorName)s occurs when interacting %(identity)s modal. ErrorMsg: %(errorMsg)s Stack: %(errorStack)s',
+	MENU: 'User: %(userName)s Error: %(errorName)s occurs when executing %(identity)s menu. ErrorMsg: %(errorMsg)s Stack: %(errorStack)s',
+	MESSAGE:
+		'User: %(userName)s Error: %(errorName)s occurs when executing message command. Message Content: %(identity)s ErrorMsg: %(errorMsg)s Stack: %(errorStack)s'
 };

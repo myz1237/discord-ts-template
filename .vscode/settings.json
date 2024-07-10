@@ -4,7 +4,7 @@
 	"eslint.validate": ["javascript", "javascriptreact", "typescript"],
 	"typescript.tsdk": "node_modules/typescript/lib",
 	"editor.codeActionsOnSave": {
-		"source.fixAll.eslint": true
+		"source.fixAll.eslint": "explicit"
 	},
-	"cSpell.words": ["autocompletes", "contextmenus", "sprintf"]
+	"cSpell.words": ["autocompletes", "contextmenus", "GUILDID", "sprintf"]
 }

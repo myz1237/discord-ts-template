@@ -12,35 +12,39 @@
 		"generate": "npx prisma generate --schema ./src/prisma/schema.prisma",
 		"deploy": "rm -rf dist && npm install && npm run generate && npm run build && ((pm2 delete [projectName] && pm2 start pm2.config.js) || pm2 start pm2.config.js)"
 	},
-	"keywords": [],
+	"keywords": [
+		"discord-bot"
+	],
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"@prisma/client": "^4.6.1",
-		"@types/glob": "^8.0.0",
-		"@types/lodash": "^4.14.197",
+		"@prisma/client": "^5.11.0",
+		"@types/glob": "^8.1.0",
+		"@types/lodash": "^4.17.6",
 		"@types/sprintf-js": "^1.1.2",
-		"ascii-table": "^0.0.9",
-		"discord-api-types": "^0.37.19",
-		"discord.js": "^14.6.0",
+		"ascii-table3": "^0.9.0",
+		"discord.js": "^14.15.3",
 		"dotenv": "^16.0.3",
-		"glob": "^8.0.3",
+		"glob": "^8.1.0",
 		"lodash": "^4.17.21",
 		"neverthrow": "^6.0.0",
 		"node-cache": "^5.1.2",
 		"nodemon": "^2.0.20",
 		"pino": "^8.6.1",
 		"pino-pretty": "^9.1.1",
-		"prisma": "^4.6.1",
-		"sprintf-js": "^1.1.2"
+		"prisma": "^5.11.0",
+		"sprintf-js": "^1.1.2",
+		"tsconfig-paths": "^4.2.0"
 	},
 	"devDependencies": {
-		"@typescript-eslint/eslint-plugin": "^6.4.1",
-		"@typescript-eslint/parser": "^6.4.1",
-		"eslint": "^8.48.0",
+		"@typescript-eslint/eslint-plugin": "^7.15.0",
+		"@typescript-eslint/parser": "^7.15.0",
+		"eslint": "^8.57.0",
 		"eslint-import-resolver-typescript": "^3.6.0",
-		"eslint-plugin-simple-import-sort": "^8.0.0",
-		"prettier": "^2.7.1",
-		"prettier-plugin-prisma": "^5.0.0"
+		"eslint-plugin-simple-import-sort": "^12.0.0",
+		"eslint-plugin-unused-imports": "^4.0.0",
+		"prettier": "^3.3.2",
+		"prettier-plugin-prisma": "^5.0.0",
+		"typescript": "^5.5.3"
 	}
 }

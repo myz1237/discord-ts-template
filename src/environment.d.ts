@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-import { CommandNameEnum } from './types/Command';
 
 declare global {
 	namespace NodeJS {
@@ -8,6 +7,7 @@ declare global {
 			GUILDID: string;
 			DATABASE_URL: string;
 			MODE: 'dev' | 'prod';
+			PREFIX: string;
 		}
 	}
 }

@@ -1,6 +1,6 @@
-/* eslint-disable no-unused-vars */
 import {
 	ApplicationCommandType,
+	Guild,
 	GuildMember,
 	Message,
 	MessageApplicationCommandData,
@@ -13,12 +13,16 @@ import {
 export interface ExtendedUserContextMenuInteraction extends UserContextMenuCommandInteraction {
 	targetMember: GuildMember;
 	member: GuildMember;
+	// will check it at InteractionCreate event, ensuring guild is defined
+	guild: Guild;
 }
 
 export interface ExtendedMessageContextMenuInteraction
 	extends MessageContextMenuCommandInteraction {
 	targetMessage: Message;
 	member: GuildMember;
+	// will check it at InteractionCreate event, ensuring guild is defined
+	guild: Guild;
 }
 
 interface MessageContextMenuCommandRunOption {
@@ -29,12 +33,13 @@ interface UserContextMenuCommandRunOption {
 	interaction: ExtendedUserContextMenuInteraction;
 }
 
-type MessageContextMenuRunFunction = (options: MessageContextMenuCommandRunOption) => any;
-type UserContextMenuRunFunction = (options: UserContextMenuCommandRunOption) => any;
+type MessageContextMenuRunFunction = (options: MessageContextMenuCommandRunOption) => unknown;
+type UserContextMenuRunFunction = (options: UserContextMenuCommandRunOption) => unknown;
 
 export enum ContextMenuNameEnum {
-	Test = 'test'
+	test = 'test'
 }
+
 export type UserContextMenuType = {
 	userPermissions?: PermissionResolvable[];
 	execute: UserContextMenuRunFunction;

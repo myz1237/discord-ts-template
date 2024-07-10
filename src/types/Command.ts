@@ -1,28 +1,31 @@
-/* eslint-disable no-unused-vars */
 import {
 	ApplicationCommandType,
 	ChatInputApplicationCommandData,
-	CommandInteraction,
-	CommandInteractionOptionResolver,
+	ChatInputCommandInteraction,
+	Guild,
 	GuildMember,
 	PermissionResolvable
 } from 'discord.js';
 import { MyClient } from 'structures/Client';
 
-export interface ExtendedCommandInteraction extends CommandInteraction {
+export interface ExtendedChatInputInteraction extends ChatInputCommandInteraction {
 	member: GuildMember;
+	// will check it at InteractionCreate event, ensuring guild is defined
+	guild: Guild;
 }
 
 interface CommandRunOptions {
 	client: MyClient;
-	interaction: ExtendedCommandInteraction;
-	args: CommandInteractionOptionResolver;
+	interaction: ExtendedChatInputInteraction;
+	args: ChatInputCommandInteraction['options'];
 }
 
-type RunFunction = (options: CommandRunOptions) => any;
+type RunFunction = (options: CommandRunOptions) => unknown;
+
 export enum CommandNameEnum {
-	Test = 'test'
+	test = 'test'
 }
+
 export type CommandType = {
 	name: CommandNameEnum;
 	userPermissions?: PermissionResolvable[];

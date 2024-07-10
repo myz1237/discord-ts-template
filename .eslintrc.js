@@ -1,6 +1,11 @@
 module.exports = {
 	parser: '@typescript-eslint/parser',
-	plugins: ['simple-import-sort'],
+	plugins: ['simple-import-sort', 'unused-imports'],
+	extends: ['plugin:@typescript-eslint/recommended-type-checked'],
+	parserOptions: {
+		project: true,
+		tsconfigRootDir: __dirname
+	},
 	settings: {
 		'import/resolver': {
 			typescript: {
@@ -12,9 +17,20 @@ module.exports = {
 		node: true
 	},
 	rules: {
-		'no-warning-comments': [1, { terms: ['todo', 'fixme', 'to-do'], location: 'anywhere' }],
-		'max-depth': ['error', 8],
+		'@typescript-eslint/strict-boolean-expressions': [
+			'error',
+			{
+				allowString: false,
+				allowNumber: false,
+				allowNullableObject: true,
+				allowNullableBoolean: false
+			}
+		],
 		'@typescript-eslint/consistent-type-definitions': 'off',
+		'@typescript-eslint/unbound-method': 'error',
+		'unused-imports/no-unused-imports': 'error',
+		eqeqeq: 'error',
+		'no-warning-comments': [1, { terms: ['todo', 'fixme', 'to-do'], location: 'anywhere' }],
 		'simple-import-sort/imports': 'error',
 		'simple-import-sort/exports': 'error',
 		'no-unused-vars': 'error',
