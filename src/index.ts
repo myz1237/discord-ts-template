@@ -1,10 +1,15 @@
 import { config } from 'dotenv';
+import { DiscordBotError } from 'utils/error';
+import { logger } from 'utils/logger';
 
 import { MyClient } from './structures/Client';
 config();
 
-const client = new MyClient();
+const myClient = new MyClient();
 
-client.start();
+myClient.start().catch((error) => {
+	logger.error('Error when starting client:', DiscordBotError.getError(error));
+	process.exit(1);
+});
 
-export default client;
+export default myClient;

@@ -6,10 +6,5 @@
 	"editor.codeActionsOnSave": {
 		"source.fixAll.eslint": "explicit"
 	},
-	"cSpell.words": [
-		"autocompletes",
-		"contextmenus",
-		"sprintf",
-		"tseslint"
-	]
+	"cSpell.words": ["autocompletes", "contextmenus", "sprintf", "tseslint"]
 }

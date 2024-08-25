@@ -1,36 +1,56 @@
-import { Guild } from 'discord.js';
+import { Interaction } from 'discord.js';
+import _ from 'lodash';
 import { sprintf } from 'sprintf-js';
-import { CommandNameEnum } from 'types/Command';
-import { ContextMenuNameEnum } from 'types/ContextMenu';
 
-import { ERROR_REPLY } from './const';
+import {
+	ErrorMessage,
+	InteractionErrorMessageTemplate,
+	InteractionErrorMessageTemplateType,
+	InteractionType
+} from './const';
+import { logger } from './logger';
 
-export function getErrorReply(errorInform: {
-	commandName: string;
-	subCommandName?: string;
-	errorMessage: string;
-}) {
-	const { commandName, subCommandName, errorMessage } = errorInform;
+export const interactionEventErrorHandler = ({
+	interaction,
+	itnType,
+	errMsgContents,
+	error
+}: {
+	interaction: Interaction;
+	itnType: InteractionType;
+	errMsgContents: Pick<InteractionErrorMessageTemplateType, 'identity' | 'userName'>;
+	error: Error;
+}) => {
+	const errorMessage = sprintf(InteractionErrorMessageTemplate[itnType], {
+		...errMsgContents,
+		errorName: error.name,
+		errorMsg: error.message,
+		errorStack: error.stack
+	});
 
-	if (subCommandName) {
-		return sprintf(ERROR_REPLY.GRAPHQL, {
-			action: `${commandName} ${subCommandName}`,
-			errorMessage: `\`${errorMessage}\``
-		});
-	} else {
-		return sprintf(ERROR_REPLY.GRAPHQL, {
-			action: `${commandName}`,
-			errorMessage: `\`${errorMessage}\``
+	if (interaction.isAutocomplete()) {
+		return logger.error(errorMessage);
+	}
+	// Ensure the channel still exists, otherwise interaction reply or followUp will throw an error
+	if (interaction.channel === null) {
+		return logger.error(errorMessage);
+	}
+
+	if (interaction.deferred) {
+		logger.error(errorMessage);
+		return interaction.followUp({
+			content: ErrorMessage.UnknownError,
+			ephemeral: true
 		});
 	}
-}
-
-export function fetchCommandId(commandName: CommandNameEnum | ContextMenuNameEnum, guild: Guild) {
-	if (process.env.MODE === 'dev') {
-		return guild.commands.cache.filter((cmd) => cmd.name === commandName).first().id;
-	} else {
-		return guild.client.application.commands.cache
-			.filter((cmd) => cmd.name === commandName)
-			.first().id;
+	if (!interaction.replied) {
+		logger.error(errorMessage);
+		return interaction.reply({
+			content: ErrorMessage.UnknownError,
+			ephemeral: true
+		});
 	}
-}
+};
+
+export const isEnumValueDuplicated = (enum_A: string[], enum_B: string[]) =>
+	_.intersection(enum_A, enum_B).length > 0;

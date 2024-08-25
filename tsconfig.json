@@ -22,8 +22,9 @@
 		"resolveJsonModule": true,
 		"importHelpers": true,
 		"allowJs": false,
-		"removeComments": true
+		"removeComments": true,
+		"strictNullChecks": true,
 	},
-	"include": ["src", "environment.d.ts"],
+	"include": ["src/**/*", "eslint.js"],
 	"exclude": ["node_modules", "**/*.spec.ts"]
 }

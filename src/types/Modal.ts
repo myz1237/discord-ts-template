@@ -1,9 +1,11 @@
-/* eslint-disable no-unused-vars */
-import { GuildMember, ModalSubmitInteraction } from 'discord.js';
+import { Guild, GuildMember, ModalSubmitInteraction } from 'discord.js';
 import { MyClient } from 'structures/Client';
 
 export interface ExtendedModalSubmitInteraction extends ModalSubmitInteraction {
 	member: GuildMember;
+	// will check it at InteractionCreate event, ensuring guild is defined
+	guild: Guild;
+	customId: ModalCustomIdEnum;
 }
 
 interface ModalRunOptions {
@@ -11,13 +13,21 @@ interface ModalRunOptions {
 	interaction: ExtendedModalSubmitInteraction;
 }
 
-type RunFunction = (options: ModalRunOptions) => any;
+type RunFunction = (options: ModalRunOptions) => unknown;
 
-export enum ModalCustomId {
-	Test = 'test'
+export enum ModalCustomIdEnum {
+	test = 'test'
 }
-export enum ModalCollectorCustomId {}
+
+export enum ModalAwaitSubmitCustomIdEnum {
+	test = 'test'
+}
+
+export enum TextInputCustomIdEnum {
+	test = 'test'
+}
+
 export interface ModalType {
-	customId: ModalCustomId;
+	customIds: ModalCustomIdEnum[];
 	execute: RunFunction;
 }
