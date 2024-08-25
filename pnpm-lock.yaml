@@ -17,9 +17,9 @@ dependencies:
   '@types/sprintf-js':
     specifier: ^1.1.2
     version: 1.1.4
-  ascii-table:
-    specifier: ^0.0.9
-    version: 0.0.9
+  ascii-table3:
+    specifier: ^0.9.0
+    version: 0.9.0
   discord-api-types:
     specifier: ^0.37.19
     version: 0.37.97
@@ -597,8 +597,11 @@ packages:
       is-shared-array-buffer: 1.0.3
     dev: true
 
-  /ascii-table@0.0.9:
-    resolution: {integrity: sha512-xpkr6sCDIYTPqzvjG8M3ncw1YOTaloWZOyrUmicoEifBEKzQzt+ooUpRpQ/AbOoJfO/p2ZKiyp79qHThzJDulQ==}
+  /ascii-table3@0.9.0:
+    resolution: {integrity: sha512-/JcvVCQRTVQHwLI8TCxSeOS9AcCV01MbCJC4plSP5ulygJH+D30lz85nvMcER5k+qoX2fJ1C/i13Zo1/eoMGTw==}
+    engines: {node: '>=11.14.0'}
+    dependencies:
+      printable-characters: 1.0.42
     dev: false
 
   /atomic-sleep@1.0.0:
@@ -1912,6 +1915,10 @@ packages:
     engines: {node: '>=14'}
     hasBin: true
     dev: true
+
+  /printable-characters@1.0.42:
+    resolution: {integrity: sha512-dKp+C4iXWK4vVYZmYSd0KBH5F/h1HoZRsbJ82AVKRO3PEo8L4lBS/vLwhVtpwwuYcoIsVY+1JYKR268yn480uQ==}
+    dev: false
 
   /prisma@5.18.0:
     resolution: {integrity: sha512-+TrSIxZsh64OPOmaSgVPH7ALL9dfU0jceYaMJXsNrTkFHO7/3RANi5K2ZiPB1De9+KDxCWn7jvRq8y8pvk+o9g==}
